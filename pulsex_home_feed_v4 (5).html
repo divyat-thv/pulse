@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pulse X — Home Feed</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700;900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&family=Noto+Sans+Telugu:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-stage:#05070d;
+    --navy:#0a0e1a;
+    --navy-2:#0d1326;
+    --ink:#0f172a;
+    --body-col:#5b6a85;
+    --hair:#e7eaf1;
+    --green:#39ff8a;
+    --blue:#3fa9ff;
+    --pink:#ff3dbf;
+    --violet:#8b5cf6;
+    --amber:#fbbf24;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;background:var(--bg-stage);font-family:'Inter',sans-serif;}
+  body{
+    display:flex;align-items:center;justify-content:center;
+    min-height:100vh;padding:40px 16px;
+    background:
+      radial-gradient(circle at 18% 12%,rgba(57,255,138,0.10),transparent 40%),
+      radial-gradient(circle at 85% 18%,rgba(255,61,191,0.10),transparent 40%),
+      radial-gradient(circle at 50% 95%,rgba(63,169,255,0.08),transparent 45%),
+      var(--bg-stage);
+  }
+
+  /* ── PHONE FRAME ── */
+  .frame{
+    width:360px;height:740px;
+    background:#000;border-radius:46px;padding:12px;
+    box-shadow:0 0 0 1px rgba(255,255,255,0.06),0 40px 80px -20px rgba(0,0,0,0.8);
+    position:relative;flex-shrink:0;
+  }
+  .frame::before{
+    content:"";position:absolute;top:12px;left:50%;transform:translateX(-50%);
+    width:120px;height:22px;background:#000;border-radius:0 0 16px 16px;z-index:30;
+  }
+  .screen{
+    width:100%;height:100%;background:var(--navy);border-radius:36px;
+    overflow:hidden;display:flex;flex-direction:column;position:relative;
+  }
+
+  /* ── STATUS BAR ── */
+  .statusbar{
+    height:30px;flex:0 0 30px;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:0 26px;color:#fff;font:600 12px 'JetBrains Mono',monospace;
+    background:var(--navy);z-index:10;
+  }
+  .statusbar .icons{display:flex;gap:5px;align-items:center;}
+  .dot-sig{width:3px;height:3px;border-radius:50%;background:#fff;}
+
+  /* ── APP HEADER ── */
+  .app-header{
+    flex:0 0 auto;
+    padding:6px 16px 10px;
+    display:flex;flex-direction:column;gap:6px;
+    background:var(--navy);
+    border-bottom:1px solid rgba(255,255,255,0.06);z-index:10;
+  }
+  .header-row1{display:flex;align-items:center;gap:8px;}
+
+  .header-tagline{
+    display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+    font:600 9.5px 'Inter',sans-serif;letter-spacing:.01em;
+  }
+  .tagline-en{color:#8b95ab;}
+  .tagline-divider{color:#4a5468;}
+  .tagline-heartbeat{
+    background:linear-gradient(90deg,var(--amber),#ffd76a);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    font-weight:700;
+  }
+  .telugu-tagline{
+    font-size:10.5px;color:#cdd6e8;gap:5px;font-family:'Noto Sans Telugu','Inter',sans-serif;
+    display:none;
+  }
+  .telugu-tagline .te-accent{
+    background:linear-gradient(90deg,var(--green),var(--blue));
+    -webkit-background-clip:text;background-clip:text;color:transparent;font-weight:700;
+  }
+
+  .lang-toggle{
+    display:flex;align-items:center;background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.10);border-radius:14px;padding:2px;
+    cursor:pointer;flex-shrink:0;
+  }
+  .lang-opt{
+    font:700 10.5px 'Inter',sans-serif;color:#8b95ab;
+    padding:4px 9px;border-radius:11px;transition:all .2s;
+  }
+  .lang-opt.active{
+    color:#06121a;background:linear-gradient(90deg,var(--green),var(--blue));
+  }
+
+  /* ═══════════════════════════
+     PULSEX LOGO — exact image
+     ═══════════════════════════ */
+  .logo-wrap{display:flex;align-items:center;gap:9px;margin-right:auto;}
+
+  .logo-signal{display:flex;align-items:flex-end;gap:0;}
+  .sig-line{
+    width:26px;height:2px;
+    background:linear-gradient(90deg,transparent,var(--green));
+    margin-bottom:4px;margin-right:2px;border-radius:1px;
+    position:relative;
+  }
+  .sig-line::before{
+    content:"";position:absolute;left:0;top:-1.5px;
+    width:4px;height:4px;border-radius:50%;background:var(--green);
+    box-shadow:0 0 4px var(--green);
+  }
+  .sig-bars{display:flex;align-items:flex-end;gap:3px;height:26px;}
+  .sig-bars span{
+    display:block;width:4.5px;border-radius:2px 2px 0 0;
+    background:linear-gradient(180deg,var(--green),#1fae5c);
+    box-shadow:0 0 6px rgba(57,255,138,0.35);
+  }
+  .sig-bars span:nth-child(1){height:9px;}
+  .sig-bars span:nth-child(2){height:14px;}
+  .sig-bars span:nth-child(3){height:19px;}
+  .sig-bars span:nth-child(4){height:26px;}
+
+  .wordmark{
+    display:flex;align-items:center;
+    font:900 20px/1 'Space Grotesk',sans-serif;
+    color:#fff;letter-spacing:0.02em;
+  }
+  .x-letter{
+    background:linear-gradient(135deg,#ff2ea8 0%,#d020c0 20%,#8b5cf6 50%,#3fa9ff 75%,#06cfff 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    font-size:28px;font-weight:900;letter-spacing:-0.01em;
+    line-height:1;display:inline-block;
+    filter:drop-shadow(0 0 6px rgba(143,70,255,0.45));
+  }
+
+  /* ═══════════════════════════
+     AUTH SCREENS (login / register)
+     ═══════════════════════════ */
+  .app-screen{
+    width:100%;height:100%;display:flex;flex-direction:column;
+    flex:1 1 auto;overflow:hidden;
+  }
+  .auth-screen{
+    position:relative;
+    padding:34px 22px 22px;
+    overflow-y:auto;
+    background:
+      radial-gradient(circle at 15% 0%,rgba(57,255,138,0.10),transparent 45%),
+      radial-gradient(circle at 90% 10%,rgba(255,61,191,0.08),transparent 40%),
+      var(--navy);
+    scrollbar-width:none;
+  }
+  .auth-screen::-webkit-scrollbar{display:none;}
+
+  .auth-lang-toggle{
+    position:absolute;top:14px;right:18px;z-index:5;
+    display:flex;align-items:center;background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.10);border-radius:14px;padding:2px;
+    cursor:pointer;
+  }
+
+  .auth-logo-block{
+    display:flex;align-items:center;justify-content:center;gap:9px;
+    margin:6px 0 6px;
+  }
+  .auth-logo-signal{height:30px;}
+  .auth-logo-signal .sig-line{width:30px;}
+  .auth-logo-signal .sig-bars{height:30px;}
+  .auth-logo-signal .sig-bars span:nth-child(1){height:11px;}
+  .auth-logo-signal .sig-bars span:nth-child(2){height:17px;}
+  .auth-logo-signal .sig-bars span:nth-child(3){height:23px;}
+  .auth-logo-signal .sig-bars span:nth-child(4){height:30px;}
+  .auth-wordmark{font-size:24px;}
+  .auth-wordmark .x-letter{font-size:33px;}
+
+  .auth-tagline{
+    text-align:center;color:#8b95ab;
+    font:600 11px 'Inter',sans-serif;letter-spacing:.02em;
+    margin-bottom:22px;
+  }
+  .auth-tagline-te{
+    text-align:center;color:#cdd6e8;
+    font:600 12px 'Noto Sans Telugu','Inter',sans-serif;
+    margin-bottom:22px;
+  }
+  .auth-tagline-te .te-accent{
+    background:linear-gradient(90deg,var(--green),var(--blue));
+    -webkit-background-clip:text;background-clip:text;color:transparent;font-weight:700;
+  }
+
+  .auth-card{
+    background:rgba(255,255,255,0.035);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:20px;padding:22px 18px 18px;
+  }
+  .auth-title{
+    font:700 19px/1.3 'Space Grotesk',sans-serif;color:#fff;margin-bottom:4px;
+  }
+  .auth-sub{
+    font:400 12.5px/1.5 'Inter',sans-serif;color:#8b95ab;margin-bottom:18px;
+  }
+
+  .field-group{margin-bottom:14px;}
+  .field-label{
+    display:block;font:600 11.5px 'Inter',sans-serif;color:#aab4cc;
+    margin-bottom:6px;letter-spacing:.01em;
+  }
+  .field-input{
+    width:100%;padding:11px 13px;border-radius:11px;
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.12);
+    color:#fff;font:500 13.5px 'Inter',sans-serif;
+    outline:none;transition:border-color .15s,background .15s;
+  }
+  .field-input::placeholder{color:#5b6a85;}
+  .field-input:focus{
+    border-color:var(--green);background:rgba(57,255,138,0.06);
+  }
+
+  .field-row-between{
+    display:flex;align-items:center;justify-content:space-between;
+    margin:2px 0 18px;flex-wrap:wrap;gap:6px;
+  }
+  .checkbox-row{
+    display:flex;align-items:center;gap:7px;cursor:pointer;
+    font:500 11.5px 'Inter',sans-serif;color:#aab4cc;
+  }
+  .checkbox-row input[type="checkbox"]{
+    width:15px;height:15px;accent-color:var(--green);cursor:pointer;flex-shrink:0;
+  }
+  .terms-row{margin-bottom:18px;line-height:1.4;}
+  .link-muted{
+    font:600 11.5px 'Inter',sans-serif;color:#6b7693;text-decoration:none;
+  }
+  .link-accent{
+    font:700 12.5px 'Inter',sans-serif;
+    background:linear-gradient(90deg,var(--green),var(--blue));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    text-decoration:none;
+  }
+
+  .btn-primary{
+    width:100%;padding:13px;border-radius:13px;border:none;cursor:pointer;
+    font:700 14px 'Inter',sans-serif;color:#06121a;
+    background:linear-gradient(90deg,var(--green),var(--blue));
+    box-shadow:0 8px 20px -8px rgba(57,255,138,0.45);
+    transition:transform .12s;
+  }
+  .btn-primary:active{transform:scale(0.98);}
+
+  .auth-error{
+    display:none;margin-top:12px;padding:9px 12px;border-radius:10px;
+    background:rgba(244,63,94,0.10);border:1px solid rgba(244,63,94,0.25);
+    color:#fda4af;font:600 11.5px/1.4 'Inter',sans-serif;
+  }
+  .auth-error.show{display:block;}
+
+  .auth-switch{
+    display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;
+    margin-top:18px;font:500 12px 'Inter',sans-serif;color:#8b95ab;
+  }
+
+  .skip-link{
+    display:block;text-align:center;margin-top:18px;
+    font:600 12px 'Inter',sans-serif;color:#5b6a85;text-decoration:none;
+  }
+
+  /* ═══════════════════════════
+     PROFILE SHEET / SIGN OUT
+     ═══════════════════════════ */
+  .profile-overlay{
+    position:absolute;inset:0;z-index:40;
+    background:rgba(2,4,10,0.55);
+    display:none;align-items:flex-end;justify-content:center;
+  }
+  .profile-overlay.show{display:flex;}
+  .profile-sheet{
+    width:100%;background:var(--navy-2);
+    border-radius:22px 22px 0 0;
+    padding:22px 20px 26px;text-align:center;
+    border-top:1px solid rgba(255,255,255,0.08);
+    animation:sheetUp .22s ease;
+  }
+  @keyframes sheetUp{
+    from{transform:translateY(16px);opacity:0;}
+    to{transform:translateY(0);opacity:1;}
+  }
+  .profile-avatar{
+    width:52px;height:52px;border-radius:50%;margin:0 auto 12px;
+    background:linear-gradient(135deg,var(--green),var(--blue));
+    display:flex;align-items:center;justify-content:center;color:#06121a;
+  }
+  .profile-name{
+    font:700 15px 'Space Grotesk',sans-serif;color:#fff;margin-bottom:3px;
+  }
+  .profile-email{
+    font:500 12px 'Inter',sans-serif;color:#8b95ab;margin-bottom:20px;min-height:16px;
+  }
+  .sign-out-btn{
+    width:100%;padding:12px;border-radius:13px;border:1px solid rgba(244,63,94,0.3);
+    background:rgba(244,63,94,0.10);color:#fda4af;
+    font:700 13.5px 'Inter',sans-serif;cursor:pointer;margin-bottom:10px;
+  }
+  .sign-out-btn:active{transform:scale(0.98);}
+  .profile-close-btn{
+    width:100%;padding:11px;border-radius:13px;border:1px solid rgba(255,255,255,0.10);
+    background:rgba(255,255,255,0.04);color:#aab4cc;
+    font:600 13px 'Inter',sans-serif;cursor:pointer;
+  }
+
+  .counter-pill{
+    font:600 11px 'JetBrains Mono',monospace;color:#cdd6e8;
+    background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.10);
+    padding:4px 10px;border-radius:20px;white-space:nowrap;
+  }
+  .icon-btn{
+    width:30px;height:30px;border-radius:50%;
+    border:1px solid rgba(255,255,255,0.10);
+    background:rgba(255,255,255,0.06);
+    display:flex;align-items:center;justify-content:center;
+    color:#cdd6e8;cursor:pointer;flex-shrink:0;
+  }
+
+  /* ── TABS ── */
+  .tabs-wrap{flex:0 0 auto;background:var(--navy-2);z-index:9;}
+  .tabs{display:flex;gap:8px;padding:10px 14px 8px;overflow-x:auto;scrollbar-width:none;}
+  .tabs::-webkit-scrollbar{display:none;}
+  .tab{
+    flex:0 0 auto;font:600 12.5px 'Inter',sans-serif;color:#aab4cc;
+    background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.07);
+    padding:7px 14px;border-radius:18px;cursor:pointer;white-space:nowrap;transition:all .2s;
+  }
+  .tab.active{
+    color:#06121a;border-color:transparent;
+    background:linear-gradient(90deg,var(--green),var(--blue));
+    box-shadow:0 4px 14px -4px rgba(57,255,138,0.5);
+  }
+  .tab.active.tab-trending{
+    color:#fff;background:linear-gradient(90deg,#f43f5e,#fb7185);
+    box-shadow:0 4px 14px -4px rgba(244,63,94,0.5);
+  }
+
+  /* ══════════════════════════════════════════
+     SNAP FEED — TikTok-style vertical paging
+     Each card snaps full-height into view
+     ══════════════════════════════════════════ */
+  .feed-snap{
+    flex:1 1 auto;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    scrollbar-width: none;
+    position:relative;
+  }
+  .feed-snap::-webkit-scrollbar{display:none;}
+
+  /* Each card = exactly 1 "page" tall — height set by JS */
+  .news-card{
+    width:100%;
+    scroll-snap-align:start;
+    scroll-snap-stop:always;
+    display:flex;
+    flex-direction:column;
+    background:#fff;
+    position:relative;
+    /* height assigned by JS via --page-h */
+    height: var(--page-h, 480px);
+    flex-shrink:0;
+  }
+
+  /* ── Card image zone ── */
+  .card-image{
+    flex:0 0 200px;position:relative;overflow:hidden;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .card-image .bigicon{width:76px;height:76px;color:rgba(255,255,255,0.25);}
+
+  .chip{
+    position:absolute;top:12px;left:12px;
+    font:600 11px 'Inter',sans-serif;color:#fff;
+    padding:5px 12px;border-radius:14px;z-index:5;
+  }
+  .time-tag{
+    position:absolute;top:12px;right:12px;
+    display:flex;align-items:center;gap:4px;
+    font:600 11px 'JetBrains Mono',monospace;
+    color:rgba(255,255,255,0.9);
+    background:rgba(0,0,0,0.30);padding:4px 9px;border-radius:10px;z-index:5;
+  }
+
+  /* Scroll-down hint — bouncing arrow at bottom of card image */
+  .scroll-hint{
+    position:absolute;bottom:10px;left:50%;transform:translateX(-50%);
+    display:flex;flex-direction:column;align-items:center;gap:1px;
+    z-index:6;pointer-events:none;
+  }
+  .scroll-hint span{
+    font:600 9px 'Inter',sans-serif;
+    color:rgba(255,255,255,0.75);letter-spacing:.05em;
+  }
+  .hint-arrow{animation:hintBounce 1.6s ease-in-out infinite;}
+  @keyframes hintBounce{
+    0%,100%{transform:translateY(0);opacity:.6;}
+    50%{transform:translateY(5px);opacity:1;}
+  }
+  /* Hide hint on last card */
+  .news-card.last .scroll-hint{display:none;}
+
+  /* ── Card body ── */
+  .card-body{
+    flex:1 1 auto;padding:12px 16px 6px;
+    display:flex;flex-direction:column;overflow:hidden;
+  }
+  .card-headline{
+    font:700 16px/1.35 'Space Grotesk',sans-serif;color:var(--ink);margin:0 0 8px;
+  }
+  .card-summary{
+    font:400 13px/1.6 'Inter',sans-serif;color:var(--body-col);flex:1;
+    overflow:hidden;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;
+  }
+  .card-source{
+    display:flex;align-items:center;gap:8px;padding:6px 0 2px;
+    border-top:1px solid var(--hair);margin-top:6px;
+  }
+  .source-dot{
+    width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;
+    animation:pulseDot 1.8s infinite;
+  }
+  @keyframes pulseDot{
+    0%{box-shadow:0 0 0 0 rgba(57,255,138,0.55);}
+    70%{box-shadow:0 0 0 5px rgba(57,255,138,0);}
+    100%{box-shadow:0 0 0 0 rgba(57,255,138,0);}
+  }
+  .source-time{font:600 11px 'JetBrains Mono',monospace;color:#8b95ab;flex:1;}
+
+  .card-actions{
+    display:flex;align-items:center;
+    padding:5px 0 5px;border-top:1px solid var(--hair);margin-top:4px;
+  }
+  .action-btn{
+    flex:1;display:flex;align-items:center;justify-content:center;gap:5px;
+    font:600 11.5px 'Inter',sans-serif;color:#6b7280;
+    padding:6px 4px;border:none;background:none;
+    cursor:pointer;border-radius:8px;transition:all .15s;
+  }
+  .action-btn:active{background:#f3f4f6;}
+  .action-btn svg{width:15px;height:15px;flex-shrink:0;}
+  .action-btn.liked{color:#ef4444;}
+  .action-btn.bookmarked{color:var(--amber);}
+  .action-divider{width:1px;height:22px;background:var(--hair);}
+
+  /* ── Progress bar (grows as you scroll) ── */
+  .progress-wrap{
+    flex:0 0 3px;background:#dde1ea;position:relative;z-index:9;
+  }
+  .progress-bar{
+    position:absolute;top:0;left:0;height:100%;width:0%;
+    background:linear-gradient(90deg,var(--green),var(--blue) 55%,var(--pink));
+    transition:width .3s ease;
+    border-radius:0 3px 3px 0;
+  }
+
+  /* ── Bottom nav ── */
+  .bottom-nav{
+    flex:0 0 auto;display:flex;background:#fff;
+    border-top:1px solid var(--hair);padding:9px 4px 12px;
+  }
+  .nav-item{
+    flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+    cursor:pointer;color:#9aa3b8;background:none;border:none;
+    font:600 10.5px 'Inter',sans-serif;position:relative;
+  }
+  .nav-item svg{width:21px;height:21px;}
+  .nav-item.active{color:#0f172a;}
+  .nav-item.active svg{color:var(--green);}
+  .nav-item .glow{
+    position:absolute;top:-3px;width:5px;height:5px;border-radius:50%;
+    background:var(--green);opacity:0;transition:opacity .2s;
+  }
+  .nav-item.active .glow{opacity:1;box-shadow:0 0 6px var(--green);}
+
+  /* ── Toast ── */
+  .toast{
+    position:absolute;bottom:80px;left:50%;
+    transform:translateX(-50%) translateY(10px);
+    background:rgba(10,14,26,0.92);color:#fff;
+    font:600 12px 'Inter',sans-serif;
+    padding:9px 16px;border-radius:20px;opacity:0;
+    transition:all .25s;z-index:50;pointer-events:none;
+    white-space:nowrap;border:1px solid rgba(255,255,255,0.12);
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  .credit{
+    position:absolute;bottom:-30px;left:0;right:0;text-align:center;
+    color:rgba(255,255,255,0.25);font:500 11px 'Inter',sans-serif;
+  }
+</style>
+</head>
+<body>
+
+<div class="frame">
+  <div class="screen">
+
+    <!-- STATUS BAR (shared across all screens) -->
+    <div class="statusbar">
+      <span>9:41</span>
+      <span class="icons">
+        <span class="dot-sig"></span>
+        <span class="dot-sig"></span>
+        <span class="dot-sig"></span>
+      </span>
+    </div>
+
+    <!-- ════════════════════════════════════
+         LOGIN SCREEN
+         ════════════════════════════════════ -->
+    <div class="app-screen auth-screen" id="screen-login">
+      <button class="auth-lang-toggle" id="loginLangToggle">
+        <span class="lang-opt active" data-lang="en">EN</span>
+        <span class="lang-opt" data-lang="te">తె</span>
+      </button>
+
+      <div class="auth-logo-block">
+        <div class="logo-signal auth-logo-signal">
+          <div class="sig-line"></div>
+          <div class="sig-bars">
+            <span></span><span></span><span></span><span></span>
+          </div>
+        </div>
+        <div class="wordmark auth-wordmark">PULSE<span class="x-letter">X</span></div>
+      </div>
+      <div class="auth-tagline" data-i18n="tagline_app">Business Short News App</div>
+      <div class="auth-tagline-te" data-i18n="tagline_te" style="display:none">
+        మరిన్ని వార్తలు.. <span class="te-accent">మరిన్ని అవకాశాలు</span>
+      </div>
+
+      <div class="auth-card">
+        <h1 class="auth-title" data-i18n="login_title">Welcome back</h1>
+        <p class="auth-sub" data-i18n="login_sub">Log in to keep up with your business heartbeat.</p>
+
+        <div class="field-group">
+          <label class="field-label" data-i18n="email_label">Email</label>
+          <input class="field-input" type="email" id="loginEmail" data-i18n-ph="email_ph" placeholder="you@example.com">
+        </div>
+        <div class="field-group">
+          <label class="field-label" data-i18n="password_label">Password</label>
+          <input class="field-input" type="password" id="loginPassword" data-i18n-ph="password_ph" placeholder="••••••••">
+        </div>
+        <div class="field-row-between">
+          <label class="checkbox-row">
+            <input type="checkbox" id="rememberMe"><span data-i18n="remember_me">Remember me</span>
+          </label>
+          <a class="link-muted" data-i18n="forgot_password" href="javascript:void(0)">Forgot password?</a>
+        </div>
+
+        <button class="btn-primary" id="loginSubmitBtn" data-i18n="login_btn">Log in</button>
+
+        <div class="auth-error" id="loginError" data-i18n="login_error">Enter both email and password to continue.</div>
+
+        <div class="auth-switch">
+          <span data-i18n="no_account">Don't have an account?</span>
+          <a class="link-accent" id="goToRegister" href="javascript:void(0)" data-i18n="sign_up">Sign up</a>
+        </div>
+      </div>
+
+      <a class="skip-link" id="skipFromLogin" href="javascript:void(0)" data-i18n="skip_for_now">Skip for now →</a>
+    </div>
+
+    <!-- ════════════════════════════════════
+         REGISTER SCREEN
+         ════════════════════════════════════ -->
+    <div class="app-screen auth-screen" id="screen-register" style="display:none">
+      <button class="auth-lang-toggle" id="registerLangToggle">
+        <span class="lang-opt active" data-lang="en">EN</span>
+        <span class="lang-opt" data-lang="te">తె</span>
+      </button>
+
+      <div class="auth-logo-block">
+        <div class="logo-signal auth-logo-signal">
+          <div class="sig-line"></div>
+          <div class="sig-bars">
+            <span></span><span></span><span></span><span></span>
+          </div>
+        </div>
+        <div class="wordmark auth-wordmark">PULSE<span class="x-letter">X</span></div>
+      </div>
+      <div class="auth-tagline" data-i18n="tagline_app">Business Short News App</div>
+      <div class="auth-tagline-te" data-i18n="tagline_te" style="display:none">
+        మరిన్ని వార్తలు.. <span class="te-accent">మరిన్ని అవకాశాలు</span>
+      </div>
+
+      <div class="auth-card">
+        <h1 class="auth-title" data-i18n="register_title">Create your account</h1>
+        <p class="auth-sub" data-i18n="register_sub">Join PulseX for short, sharp business news.</p>
+
+        <div class="field-group">
+          <label class="field-label" data-i18n="name_label">Full name</label>
+          <input class="field-input" type="text" id="regName" data-i18n-ph="name_ph" placeholder="Your name">
+        </div>
+        <div class="field-group">
+          <label class="field-label" data-i18n="email_label">Email</label>
+          <input class="field-input" type="email" id="regEmail" data-i18n-ph="email_ph" placeholder="you@example.com">
+        </div>
+        <div class="field-group">
+          <label class="field-label" data-i18n="password_label">Password</label>
+          <input class="field-input" type="password" id="regPassword" data-i18n-ph="password_create_ph" placeholder="Create a password">
+        </div>
+        <div class="field-group">
+          <label class="field-label" data-i18n="confirm_password_label">Confirm password</label>
+          <input class="field-input" type="password" id="regPasswordConfirm" data-i18n-ph="password_ph" placeholder="••••••••">
+        </div>
+
+        <label class="checkbox-row terms-row">
+          <input type="checkbox" id="agreeTerms">
+          <span data-i18n="agree_terms">I agree to the Terms and Privacy Policy</span>
+        </label>
+
+        <button class="btn-primary" id="registerSubmitBtn" data-i18n="register_btn">Create account</button>
+
+        <div class="auth-error" id="registerError" data-i18n="register_error">Fill in all fields and confirm your password.</div>
+
+        <div class="auth-switch">
+          <span data-i18n="have_account">Already have an account?</span>
+          <a class="link-accent" id="goToLogin" href="javascript:void(0)" data-i18n="log_in">Log in</a>
+        </div>
+      </div>
+
+      <a class="skip-link" id="skipFromRegister" href="javascript:void(0)" data-i18n="skip_for_now">Skip for now →</a>
+    </div>
+
+    <!-- ════════════════════════════════════
+         HOME FEED SCREEN
+         ════════════════════════════════════ -->
+    <div class="app-screen" id="screen-home" style="display:none">
+
+    <!-- HEADER with exact PulseX logo -->
+    <div class="app-header">
+      <div class="header-row1">
+        <div class="logo-wrap">
+          <div class="logo-signal">
+            <div class="sig-line"></div>
+            <div class="sig-bars">
+              <span></span><span></span><span></span><span></span>
+            </div>
+          </div>
+          <div class="wordmark">PULSE<span class="x-letter">X</span></div>
+        </div>
+        <button class="lang-toggle" id="langToggle">
+          <span class="lang-opt active" data-lang="en">EN</span>
+          <span class="lang-opt" data-lang="te">తె</span>
+        </button>
+        <div class="counter-pill" id="counter">1 / 9</div>
+        <button class="icon-btn" id="refreshBtn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+            <path d="M21 12a9 9 0 1 1-2.6-6.36"/><polyline points="21 3 21 9 15 9"/>
+          </svg>
+        </button>
+      </div>
+      <div class="header-tagline">
+        <span class="tagline-en" id="taglineApp">Business Short News App</span>
+        <span class="tagline-divider">·</span>
+        <span class="tagline-heartbeat" id="taglineHeartbeat">Your Daily Business Heartbeat</span>
+      </div>
+      <div class="header-tagline telugu-tagline" id="taglineTelugu">
+        <span>మరిన్ని వార్తలు..</span>
+        <span class="te-accent">మరిన్ని అవకాశాలు</span>
+      </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs-wrap">
+      <div class="tabs" id="tabs"></div>
+    </div>
+
+    <!-- ✦ SNAP FEED — cards stack here, each one page tall ✦ -->
+    <div class="feed-snap" id="feedSnap"></div>
+
+    <!-- PROGRESS BAR -->
+    <div class="progress-wrap">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <div class="bottom-nav" id="bottomNav"></div>
+
+    <!-- PROFILE SHEET (shown when Profile tab tapped) -->
+    <div class="profile-overlay" id="profileOverlay">
+      <div class="profile-sheet">
+        <div class="profile-avatar">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-3.5 3.5-6 8-6s8 2.5 8 6"/></svg>
+        </div>
+        <div class="profile-name" id="profileName" data-i18n="profile_default_name">Welcome</div>
+        <div class="profile-email" id="profileEmail"></div>
+        <button class="sign-out-btn" id="signOutBtn" data-i18n="sign_out">Sign out</button>
+        <button class="profile-close-btn" id="profileCloseBtn" data-i18n="close">Close</button>
+      </div>
+    </div>
+
+    </div><!-- /screen-home -->
+
+    <div class="toast" id="toast"></div>
+  </div>
+  <div class="credit">Pulse X · Home feed</div>
+</div>
+
+<script>
+/* ─────────────────────────────────────────
+   DATA
+───────────────────────────────────────── */
+const ICONS = {
+  bars:    '<path d="M4 19V13"/><path d="M10 19V9"/><path d="M16 19V5"/><path d="M22 19V11"/>',
+  rocket:  '<path d="M12 2c2 2 4 6 4 10 0 2-1 4-2 5l-2 2-2-2c-1-1-2-3-2-5 0-4 2-8 4-10z"/><path d="M9 15c-2 .5-3 2-3 5 3 0 4.5-1 5-3"/><path d="M15 15c2 .5 3 2 3 5-3 0-4.5-1-5-3"/>',
+  bell:    '<path d="M10 21a2 2 0 0 0 4 0"/><path d="M5 17h14l-1.4-2.1A6 6 0 0 1 17 11V9a5 5 0 0 0-10 0v2a6 6 0 0 1-1.6 3.9L4 17z"/>',
+  cpu:     '<rect x="6" y="6" width="12" height="12" rx="1.5"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/>',
+  percent: '<line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.3"/><circle cx="17.5" cy="17.5" r="2.3"/>',
+  clapper: '<path d="M3 9.5 5 6h14l2 3.5"/><rect x="3" y="9.5" width="18" height="11" rx="1.5"/><line x1="7" y1="6" x2="9.5" y2="9.5"/><line x1="12" y1="6" x2="14.5" y2="9.5"/>'
+};
+
+const CATS = [
+  {id:'all',label:{en:'All',te:'అన్నీ'}},
+  {id:'trending',label:{en:'Trending',te:'ట్రెండింగ్'},color:'#f43f5e',icon:'bars'},
+  {id:'markets',label:{en:'Markets',te:'మార్కెట్లు'},color:'#22c55e',icon:'bars'},
+  {id:'startups',label:{en:'Startups',te:'స్టార్టప్‌లు'},color:'#8b5cf6',icon:'rocket'},
+  {id:'ipos',label:{en:'IPOs',te:'ఐపీవోలు'},color:'#22d3ee',icon:'bell'},
+  {id:'tech',label:{en:'Tech',te:'టెక్'},color:'#3b82f6',icon:'cpu'},
+  {id:'finance',label:{en:'Finance',te:'ఫైనాన్స్'},color:'#fbbf24',icon:'percent'},
+  {id:'entertainment',label:{en:'Entertainment',te:'వినోదం'},color:'#ec4899',icon:'clapper'}
+];
+const catMap = Object.fromEntries(
+  CATS.filter(c=>c.id!=='all'&&c.id!=='trending').map(c=>[c.id,c])
+);
+
+const GRADS = {
+  markets:      'linear-gradient(150deg,#22c55edd 0%,#0a0e1a 78%)',
+  startups:     'linear-gradient(150deg,#8b5cf6dd 0%,#0a0e1a 78%)',
+  ipos:         'linear-gradient(150deg,#22d3eedd 0%,#0a0e1a 78%)',
+  tech:         'linear-gradient(150deg,#3b82f6dd 0%,#0a0e1a 78%)',
+  finance:      'linear-gradient(150deg,#fbbf24dd 0%,#0a0e1a 78%)',
+  entertainment:'linear-gradient(150deg,#ec4899dd 0%,#0a0e1a 78%)',
+};
+
+const NEWS = [
+  {cat:'markets',
+   time:{en:'12 min ago',te:'12 నిమిషాల క్రితం'},
+   headline:{en:'Sensex Hits Record High Amid Strong FII Inflows',te:'భారీ FII పెట్టుబడులతో సెన్సెక్స్ రికార్డు స్థాయికి'},
+   body:{en:'Benchmark indices rallied to a fresh all-time high as foreign institutional investors stepped up buying in banking and IT stocks. Analysts point to easing global rates and robust quarterly earnings as key drivers.',
+         te:'విదేశీ సంస్థాగత పెట్టుబడిదారులు బ్యాంకింగ్, ఐటీ షేర్లలో కొనుగోళ్లు పెంచడంతో బెంచ్‌మార్క్ సూచీలు సరికొత్త రికార్డు స్థాయికి చేరుకున్నాయి. అంతర్జాతీయ వడ్డీ రేట్లు తగ్గడం, త్రైమాసిక ఫలితాలు బలంగా ఉండటం దీనికి కారణమని విశ్లేషకులు చెబుతున్నారు.'}},
+  {cat:'startups',
+   time:{en:'40 min ago',te:'40 నిమిషాల క్రితం'},
+   headline:{en:'Bengaluru Fintech Startup Raises $40M in Series B',te:'బెంగళూరు ఫిన్‌టెక్ స్టార్టప్‌కు సిరీస్ బీలో $40 మిలియన్లు'},
+   body:{en:'The lending platform plans to expand into tier-2 cities and strengthen its underwriting engine. The round was led by a marquee global VC, with existing investors also participating.',
+         te:'ఈ లెండింగ్ ప్లాట్‌ఫామ్ టైర్-2 నగరాలకు విస్తరించి, తన అండర్‌రైటింగ్ వ్యవస్థను బలోపేతం చేసుకోవాలని భావిస్తోంది. ఈ నిధుల సేకరణకు ఒక ప్రముఖ గ్లోబల్ వీసీ నాయకత్వం వహించింది, పాత పెట్టుబడిదారులు కూడా పాల్గొన్నారు.'}},
+  {cat:'ipos',
+   time:{en:'1 hr ago',te:'1 గంట క్రితం'},
+   headline:{en:'Logistics Major Files Draft Papers for ₹2,000 Cr IPO',te:'రూ.2,000 కోట్ల ఐపీవో కోసం లాజిస్టిక్స్ దిగ్గజం పత్రాలు దాఖలు'},
+   body:{en:'The company aims to use proceeds to expand its warehousing network and pare down debt. The issue will be a mix of fresh shares and an offer for sale by existing promoters.',
+         te:'తన గిడ్డంగుల నెట్‌వర్క్‌ను విస్తరించడానికి, అప్పులు తీర్చడానికి ఈ నిధులను వినియోగించాలని కంపెనీ లక్ష్యంగా పెట్టుకుంది. ఈ ఇష్యూలో కొత్త షేర్లతో పాటు ప్రస్తుత ప్రమోటర్ల ఆఫర్ ఫర్ సేల్ కూడా ఉంటుంది.'}},
+  {cat:'tech',
+   time:{en:'2 hrs ago',te:'2 గంటల క్రితం'},
+   headline:{en:'Hyderabad SaaS Firm Launches AI-Powered Analytics Suite',te:'హైదరాబాద్ సాస్ సంస్థ ఏఐ ఆధారిత అనలిటిక్స్ సూట్ ఆవిష్కరణ'},
+   body:{en:'The new platform automatically surfaces revenue anomalies and forecasting insights for mid-market businesses. Early enterprise pilots have cut reporting time by nearly 70 percent.',
+         te:'ఈ కొత్త ప్లాట్‌ఫామ్ మధ్యస్థాయి వ్యాపారాల కోసం రెవెన్యూ అసాధారణతలను, ఫోర్‌కాస్టింగ్ సమాచారాన్ని స్వయంచాలకంగా గుర్తిస్తుంది. ప్రారంభ ఎంటర్‌ప్రైజ్ ట్రయల్స్‌లో రిపోర్టింగ్ సమయం దాదాపు 70 శాతం తగ్గింది.'}},
+  {cat:'finance',
+   time:{en:'3 hrs ago',te:'3 గంటల క్రితం'},
+   headline:{en:'RBI Keeps Repo Rate Unchanged at 6.5%',te:'రెపో రేటును 6.5%గా కొనసాగించిన ఆర్‌బీఐ'},
+   body:{en:'The central bank held rates steady for the fourth straight policy meeting, citing balanced inflation risks. The governor signalled a watchful stance heading into the next quarter amid global uncertainty.',
+         te:'ద్రవ్యోల్బణ ప్రమాదాలు సమతుల్యంగా ఉన్నాయని పేర్కొంటూ వరుసగా నాలుగో పాలసీ సమావేశంలోనూ రిజర్వ్ బ్యాంక్ రేట్లను స్థిరంగా ఉంచింది. అంతర్జాతీయ అనిశ్చితి నేపథ్యంలో గవర్నర్ జాగ్రత్తగా వ్యవహరించే వైఖరిని సూచించారు.'}},
+  {cat:'entertainment',
+   time:{en:'4 hrs ago',te:'4 గంటల క్రితం'},
+   headline:{en:'Streaming Giant Greenlights Big-Budget Telugu Original',te:'భారీ బడ్జెట్ తెలుగు ఒరిజినల్‌కు స్ట్రీమింగ్ దిగ్గజం గ్రీన్‌సిగ్నల్'},
+   body:{en:'The series marks the largest regional-language investment yet for the platform. Industry watchers see it as a major bet on the rapidly growing Telugu OTT audience segment.',
+         te:'ఈ సిరీస్ ఆ ప్లాట్‌ఫామ్ చేస్తున్న అతిపెద్ద ప్రాంతీయ భాషా పెట్టుబడిగా నిలుస్తోంది. వేగంగా వృద్ధి చెందుతున్న తెలుగు ఓటీటీ ప్రేక్షకులపై ఇది ఒక పెద్ద పందెంగా పరిశ్రమ వర్గాలు భావిస్తున్నాయి.'}},
+  {cat:'markets',
+   time:{en:'5 hrs ago',te:'5 గంటల క్రితం'},
+   headline:{en:'Rupee Strengthens Past 82 Against the Dollar',te:'డాలర్‌తో పోలిస్తే 82 మార్కు దాటి బలపడిన రూపాయి'},
+   body:{en:'The rupee gained on softer crude prices and steady portfolio inflows into domestic equities. Traders expect the currency to trade in a narrow range ahead of the upcoming policy meeting.',
+         te:'క్రూడ్ ఆయిల్ ధరలు తగ్గడం, దేశీయ ఈక్విటీలలో స్థిరమైన పోర్ట్‌ఫోలియో పెట్టుబడుల వల్ల రూపాయి బలపడింది. రాబోయే పాలసీ సమావేశానికి ముందు కరెన్సీ ఇరుకైన శ్రేణిలో కదలాడుతుందని ట్రేడర్లు భావిస్తున్నారు.'}},
+  {cat:'startups',
+   time:{en:'6 hrs ago',te:'6 గంటల క్రితం'},
+   headline:{en:'Two More Indian Startups Reach Unicorn Status',te:'మరో రెండు భారతీయ స్టార్టప్‌లకు యూనికార్న్ హోదా'},
+   body:{en:'Both companies, in logistics-tech and B2B commerce, crossed the $1 billion valuation mark in their latest funding rounds. The news caps a strong quarter for late-stage Indian startup funding.',
+         te:'లాజిస్టిక్స్-టెక్, బీ2బీ కామర్స్ రంగాలకు చెందిన ఈ రెండు కంపెనీలు తమ తాజా నిధుల సేకరణలో $1 బిలియన్ విలువను అధిగమించాయి. భారతీయ స్టార్టప్‌ల చివరి దశ నిధుల సేకరణకు ఇది బలమైన త్రైమాసికంగా నిలిచింది.'}},
+  {cat:'tech',
+   time:{en:'8 hrs ago',te:'8 గంటల క్రితం'},
+   headline:{en:"Hyderabad Named India's Fastest-Growing AI Hub",te:'భారతదేశంలో అత్యంత వేగంగా వృద్ధి చెందుతున్న ఏఐ హబ్‌గా హైదరాబాద్'},
+   body:{en:'A new industry report ranks the city among the top destinations for AI talent and GCC investment. Office leasing for tech and R&D campuses has risen sharply over the past year.',
+         te:'ఏఐ టాలెంట్, జీసీసీ పెట్టుబడుల కోసం అత్యుత్తమ గమ్యస్థానాల్లో ఈ నగరం ఒకటిగా ఒక కొత్త పరిశ్రమ నివేదిక పేర్కొంది. గత ఏడాది కాలంలో టెక్, ఆర్‌అండ్‌డీ క్యాంపస్‌ల కోసం ఆఫీసు లీజింగ్ గణనీయంగా పెరిగింది.'}}
+];
+
+/* ─────────────────────────────────────────
+   STATE
+───────────────────────────────────────── */
+let activeCat  = 'all';
+let likedCards = new Set();
+let savedCards = new Set();
+let currentIdx = 0;
+let currentLang = 'en';
+let currentUserEmail = '';
+let currentUserName = '';
+
+const UI = {
+  en:{scroll:'SCROLL', like:'Like', share:'Share', save:'Save', source:'PulseX Business', toastLike:'❤️ Liked!', toastUnlike:'Unliked', toastSave:'🔖 Saved!', toastUnsave:'Removed', toastShare:'🔗 Link copied!', toastRefresh:'Feed refreshed'},
+  te:{scroll:'స్క్రోల్', like:'లైక్', share:'షేర్', save:'సేవ్', source:'పల్స్ఎక్స్ బిజినెస్', toastLike:'❤️ లైక్ చేశారు!', toastUnlike:'అన్‌లైక్ చేశారు', toastSave:'🔖 సేవ్ చేశారు!', toastUnsave:'తీసివేయబడింది', toastShare:'🔗 లింక్ కాపీ చేయబడింది!', toastRefresh:'ఫీడ్ రిఫ్రెష్ చేయబడింది'}
+};
+
+const AUTH_STR = {
+  tagline_app:{en:'Business Short News App',te:''},
+  login_title:{en:'Welcome back',te:'తిరిగి స్వాగతం'},
+  login_sub:{en:'Log in to keep up with your business heartbeat.',te:'మీ బిజినెస్ హార్ట్‌బీట్‌తో అప్‌డేట్‌గా ఉండటానికి లాగిన్ చేయండి.'},
+  register_title:{en:'Create your account',te:'మీ ఖాతాను సృష్టించండి'},
+  register_sub:{en:'Join PulseX for short, sharp business news.',te:'చిన్న, పదునైన బిజినెస్ వార్తల కోసం PulseXలో చేరండి.'},
+  email_label:{en:'Email',te:'ఇమెయిల్'},
+  password_label:{en:'Password',te:'పాస్‌వర్డ్'},
+  confirm_password_label:{en:'Confirm password',te:'పాస్‌వర్డ్ నిర్ధారించండి'},
+  name_label:{en:'Full name',te:'పూర్తి పేరు'},
+  email_ph:{en:'you@example.com',te:'you@example.com'},
+  password_ph:{en:'••••••••',te:'••••••••'},
+  password_create_ph:{en:'Create a password',te:'పాస్‌వర్డ్ సృష్టించండి'},
+  name_ph:{en:'Your name',te:'మీ పేరు'},
+  remember_me:{en:'Remember me',te:'నన్ను గుర్తుంచుకో'},
+  forgot_password:{en:'Forgot password?',te:'పాస్‌వర్డ్ మర్చిపోయారా?'},
+  login_btn:{en:'Log in',te:'లాగిన్'},
+  register_btn:{en:'Create account',te:'ఖాతా సృష్టించండి'},
+  login_error:{en:'Enter both email and password to continue.',te:'కొనసాగించడానికి ఇమెయిల్, పాస్‌వర్డ్ రెండూ నమోదు చేయండి.'},
+  register_error:{en:'Fill in all fields and confirm your password.',te:'అన్ని ఫీల్డ్‌లను పూరించి పాస్‌వర్డ్‌ను నిర్ధారించండి.'},
+  no_account:{en:"Don't have an account?",te:'ఖాతా లేదా?'},
+  have_account:{en:'Already have an account?',te:'ఖాతా ఉందా?'},
+  sign_up:{en:'Sign up',te:'సైన్ అప్'},
+  log_in:{en:'Log in',te:'లాగిన్'},
+  agree_terms:{en:'I agree to the Terms and Privacy Policy',te:'నేను నిబంధనలు మరియు ప్రైవసీ పాలసీకి అంగీకరిస్తున్నాను'},
+  skip_for_now:{en:'Skip for now →',te:'ఇప్పుడు దాటవేయి →'},
+  sign_out:{en:'Sign out',te:'సైన్ అవుట్'},
+  close:{en:'Close',te:'మూసివేయి'},
+  profile_default_name:{en:'Welcome',te:'స్వాగతం'},
+  signed_out_toast:{en:'👋 Signed out',te:'👋 సైన్ అవుట్ అయ్యారు'}
+};
+
+function applyAuthLang(lang){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key = el.dataset.i18n;
+    if(key==='tagline_te') return;
+    const entry = AUTH_STR[key];
+    if(!entry) return;
+    if(key==='tagline_app'){
+      el.style.display = lang==='en' ? '' : 'none';
+    } else {
+      el.textContent = entry[lang];
+    }
+  });
+  document.querySelectorAll('.auth-tagline-te').forEach(el=>{
+    el.style.display = lang==='te' ? '' : 'none';
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{
+    const entry = AUTH_STR[el.dataset.i18nPh];
+    if(entry) el.setAttribute('placeholder', entry[lang]);
+  });
+  document.querySelectorAll('#screen-login .lang-opt, #screen-register .lang-opt').forEach(el=>{
+    el.classList.toggle('active', el.dataset.lang === lang);
+  });
+}
+
+function getList(){
+  return activeCat==='all'||activeCat==='trending'
+    ? NEWS : NEWS.filter(n=>n.cat===activeCat);
+}
+
+/* ─────────────────────────────────────────
+   BUILD ONE CARD
+───────────────────────────────────────── */
+function buildCard(item, gi, total){
+  const cat   = catMap[item.cat]||{color:'#39ff8a',icon:'bars',label:{en:'News',te:'వార్తలు'}};
+  const liked = likedCards.has(gi);
+  const saved = savedCards.has(gi);
+  const isLast = gi === total - 1;
+  const t = UI[currentLang];
+  const time = item.time[currentLang];
+  return `
+<div class="news-card${isLast?' last':''}" data-idx="${gi}">
+  <div class="card-image" style="background:${GRADS[item.cat]||GRADS.markets}">
+    <svg class="bigicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">${ICONS[cat.icon]}</svg>
+    <div class="chip" style="background:${cat.color}">${cat.label[currentLang]}</div>
+    <div class="time-tag">
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+      ${time}
+    </div>
+    <!-- Scroll-down hint (hidden on last card via CSS) -->
+    <div class="scroll-hint">
+      <svg class="hint-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      <span>${t.scroll}</span>
+    </div>
+  </div>
+  <div class="card-body">
+    <h2 class="card-headline">${item.headline[currentLang]}</h2>
+    <p class="card-summary">${item.body[currentLang]}</p>
+    <div class="card-source">
+      <span class="source-dot"></span>
+      <span class="source-time">${time}</span>
+      <span style="font:500 11px 'Inter',sans-serif;color:#8b95ab">${t.source}</span>
+    </div>
+    <div class="card-actions">
+      <button class="action-btn${liked?' liked':''}" id="like-${gi}" onclick="toggleLike(${gi})">
+        <svg viewBox="0 0 24 24" fill="${liked?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l7.78-7.78a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        ${t.like}
+      </button>
+      <div class="action-divider"></div>
+      <button class="action-btn" onclick="doShare()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        ${t.share}
+      </button>
+      <div class="action-divider"></div>
+      <button class="action-btn${saved?' bookmarked':''}" id="bm-${gi}" onclick="toggleSave(${gi})">
+        <svg viewBox="0 0 24 24" fill="${saved?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+        ${t.save}
+      </button>
+    </div>
+  </div>
+</div>`;
+}
+
+/* ─────────────────────────────────────────
+   RENDER ALL CARDS INTO SNAP CONTAINER
+───────────────────────────────────────── */
+function renderFeed(){
+  const snap = document.getElementById('feedSnap');
+  const list = getList();
+
+  /* Measure visible height first */
+  const pageH = snap.clientHeight || 480;
+
+  /* Inject CSS variable so every card gets exact height */
+  snap.style.setProperty('--page-h', pageH + 'px');
+
+  snap.innerHTML = list.map((item,i) => buildCard(item, i, list.length)).join('');
+
+  /* Reset scroll to top */
+  snap.scrollTop = 0;
+  currentIdx = 0;
+  updateUI(0, list.length);
+}
+
+/* ─────────────────────────────────────────
+   SCROLL HANDLER — detects which page is visible
+───────────────────────────────────────── */
+function onSnapScroll(){
+  const snap = document.getElementById('feedSnap');
+  const pageH = snap.clientHeight;
+  if(!pageH) return;
+
+  const rawIdx  = snap.scrollTop / pageH;
+  const idx     = Math.round(rawIdx);
+  const list    = getList();
+  const clamped = Math.max(0, Math.min(idx, list.length - 1));
+
+  if(clamped !== currentIdx){
+    currentIdx = clamped;
+    updateUI(currentIdx, list.length);
+  }
+}
+
+/* ─────────────────────────────────────────
+   UPDATE COUNTER + PROGRESS BAR
+───────────────────────────────────────── */
+function updateUI(idx, total){
+  document.getElementById('counter').textContent = (idx+1) + ' / ' + total;
+  const pct = total > 1 ? ((idx / (total-1)) * 100).toFixed(1) : '100';
+  document.getElementById('progressBar').style.width = pct + '%';
+}
+
+/* ─────────────────────────────────────────
+   TABS
+───────────────────────────────────────── */
+function renderTabs(){
+  const wrap = document.getElementById('tabs');
+  wrap.innerHTML = '';
+  CATS.forEach(c=>{
+    const el = document.createElement('div');
+    el.className = 'tab'+(c.id===activeCat?' active':'')+(c.id==='trending'?' tab-trending':'');
+    el.textContent = c.label[currentLang];
+    el.onclick = ()=>{
+      activeCat = c.id;
+      renderTabs();
+      renderFeed();
+    };
+    wrap.appendChild(el);
+  });
+}
+
+/* ─────────────────────────────────────────
+   ACTIONS
+───────────────────────────────────────── */
+function toggleLike(idx){
+  likedCards.has(idx) ? likedCards.delete(idx) : likedCards.add(idx);
+  const btn = document.getElementById('like-'+idx);
+  if(!btn) return;
+  btn.classList.toggle('liked', likedCards.has(idx));
+  btn.querySelector('svg').setAttribute('fill', likedCards.has(idx)?'currentColor':'none');
+  showToast(likedCards.has(idx)?UI[currentLang].toastLike:UI[currentLang].toastUnlike);
+}
+function toggleSave(idx){
+  savedCards.has(idx) ? savedCards.delete(idx) : savedCards.add(idx);
+  const btn = document.getElementById('bm-'+idx);
+  if(!btn) return;
+  btn.classList.toggle('bookmarked', savedCards.has(idx));
+  btn.querySelector('svg').setAttribute('fill', savedCards.has(idx)?'currentColor':'none');
+  showToast(savedCards.has(idx)?UI[currentLang].toastSave:UI[currentLang].toastUnsave);
+}
+function doShare(){ showToast(UI[currentLang].toastShare); }
+
+document.getElementById('refreshBtn').onclick = ()=>{
+  renderFeed();
+  showToast(UI[currentLang].toastRefresh);
+};
+
+/* ─────────────────────────────────────────
+   BOTTOM NAV
+───────────────────────────────────────── */
+const NAV = [
+  {id:'home',label:{en:'Home',te:'హోమ్'},active:true,icon:'<path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v9.5a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10"/>'},
+  {id:'trending',label:{en:'Trending',te:'ట్రెండింగ్'},icon:'<polyline points="3 17 9 11 13 15 21 6"/><polyline points="15 6 21 6 21 12"/>'},
+  {id:'saved',label:{en:'Saved',te:'సేవ్ చేసినవి'},icon:'<path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/>'},
+  {id:'profile',label:{en:'Profile',te:'ప్రొఫైల్'},icon:'<circle cx="12" cy="8" r="4"/><path d="M4 20c0-3.5 3.5-6 8-6s8 2.5 8 6"/>'}
+];
+function renderNav(){
+  const navWrap = document.getElementById('bottomNav');
+  const prevActive = [...navWrap.children].findIndex(c=>c.classList.contains('active'));
+  navWrap.innerHTML = '';
+  NAV.forEach((n,i)=>{
+    const btn = document.createElement('button');
+    const isActive = prevActive===-1 ? n.active : i===prevActive;
+    btn.className = 'nav-item'+(isActive?' active':'');
+    btn.innerHTML = `<span class="glow"></span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${n.icon}</svg>
+      <span>${n.label[currentLang]}</span>`;
+    btn.onclick = ()=>{
+      if(n.id === 'profile'){
+        openProfileSheet();
+        return;
+      }
+      [...navWrap.children].forEach(c=>c.classList.remove('active'));
+      btn.classList.add('active');
+    };
+    navWrap.appendChild(btn);
+  });
+}
+renderNav();
+
+/* ─────────────────────────────────────────
+   TOAST
+───────────────────────────────────────── */
+let toastTimer;
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 1500);
+}
+
+/* ─────────────────────────────────────────
+   LANGUAGE TOGGLE
+───────────────────────────────────────── */
+function setLang(lang){
+  if(lang === currentLang) return;
+  currentLang = lang;
+  document.querySelectorAll('.lang-opt').forEach(el=>{
+    el.classList.toggle('active', el.dataset.lang === lang);
+  });
+  document.getElementById('taglineApp').style.display    = lang==='en' ? '' : 'none';
+  document.getElementById('taglineHeartbeat').style.display = lang==='en' ? '' : 'none';
+  document.querySelector('.tagline-divider').style.display  = lang==='en' ? '' : 'none';
+  document.getElementById('taglineTelugu').style.display    = lang==='te' ? 'flex' : 'none';
+  applyAuthLang(lang);
+  renderTabs();
+  renderFeed();
+  renderNav();
+}
+document.getElementById('langToggle').onclick = ()=>{
+  setLang(currentLang === 'en' ? 'te' : 'en');
+};
+document.getElementById('loginLangToggle').onclick = ()=>{
+  setLang(currentLang === 'en' ? 'te' : 'en');
+};
+document.getElementById('registerLangToggle').onclick = ()=>{
+  setLang(currentLang === 'en' ? 'te' : 'en');
+};
+
+/* ─────────────────────────────────────────
+   SCREEN SWITCHING
+───────────────────────────────────────── */
+function showScreen(name){
+  ['login','register','home'].forEach(s=>{
+    document.getElementById('screen-'+s).style.display = (s===name) ? 'flex' : 'none';
+  });
+  if(name === 'home'){
+    requestAnimationFrame(()=>{
+      requestAnimationFrame(()=>{ renderFeed(); });
+    });
+  }
+}
+document.getElementById('goToRegister').onclick   = ()=>showScreen('register');
+document.getElementById('goToLogin').onclick      = ()=>showScreen('login');
+document.getElementById('skipFromLogin').onclick  = ()=>showScreen('home');
+document.getElementById('skipFromRegister').onclick = ()=>showScreen('home');
+
+/* ─────────────────────────────────────────
+   AUTH FORM HANDLERS (front-end only, no backend)
+───────────────────────────────────────── */
+document.getElementById('loginSubmitBtn').onclick = ()=>{
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass  = document.getElementById('loginPassword').value.trim();
+  const err = document.getElementById('loginError');
+  if(!email || !pass){
+    err.classList.add('show');
+    return;
+  }
+  err.classList.remove('show');
+  currentUserEmail = email;
+  showScreen('home');
+  showToast(currentLang==='en' ? '✅ Logged in' : '✅ లాగిన్ అయ్యారు');
+};
+
+document.getElementById('registerSubmitBtn').onclick = ()=>{
+  const name  = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const pass  = document.getElementById('regPassword').value.trim();
+  const confirm = document.getElementById('regPasswordConfirm').value.trim();
+  const agreed = document.getElementById('agreeTerms').checked;
+  const err = document.getElementById('registerError');
+  if(!name || !email || !pass || !confirm || pass !== confirm || !agreed){
+    err.classList.add('show');
+    return;
+  }
+  err.classList.remove('show');
+  currentUserName = name;
+  document.getElementById('loginEmail').value = email;
+  document.getElementById('loginPassword').value = '';
+  showScreen('login');
+  showToast(currentLang==='en' ? '🎉 Account created — log in to continue' : '🎉 ఖాతా సృష్టించబడింది — కొనసాగించడానికి లాగిన్ చేయండి');
+};
+
+/* ─────────────────────────────────────────
+   PROFILE SHEET / SIGN OUT
+───────────────────────────────────────── */
+function openProfileSheet(){
+  document.getElementById('profileName').textContent =
+    currentUserName || (currentLang==='en' ? 'Welcome' : 'స్వాగతం');
+  document.getElementById('profileEmail').textContent = currentUserEmail || '';
+  document.getElementById('profileOverlay').classList.add('show');
+}
+function closeProfileSheet(){
+  document.getElementById('profileOverlay').classList.remove('show');
+}
+document.getElementById('profileCloseBtn').onclick = closeProfileSheet;
+document.getElementById('profileOverlay').onclick = (e)=>{
+  if(e.target.id === 'profileOverlay') closeProfileSheet();
+};
+document.getElementById('signOutBtn').onclick = ()=>{
+  closeProfileSheet();
+  currentUserEmail = '';
+  currentUserName = '';
+  likedCards = new Set();
+  savedCards = new Set();
+  document.getElementById('loginEmail').value = '';
+  document.getElementById('loginPassword').value = '';
+  showScreen('login');
+  showToast(AUTH_STR.signed_out_toast[currentLang]);
+};
+
+/* ─────────────────────────────────────────
+   INIT
+───────────────────────────────────────── */
+const snap = document.getElementById('feedSnap');
+snap.addEventListener('scroll', onSnapScroll, {passive:true});
+
+renderTabs();
+</script>
+</body>
+</html>
